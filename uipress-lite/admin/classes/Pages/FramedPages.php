@@ -16,8 +16,8 @@ class FramedPages
   public static function start()
   {
     // Capture toolbar and menu objects
-    AdminMenu::capture();
-    ToolBar::capture();
+    //AdminMenu::capture();
+    //ToolBar::capture();
 
     self::add_hooks();
   }
@@ -83,7 +83,7 @@ class FramedPages
   public static function html_attributes()
   {
     $data = "";
-    $data .= 'uip-framed-page="true" ';
+    $data .= 'uip-framed-page="true" uip-core-app="true"';
 
     // Get active template ID
     $user_id = get_current_user_id();

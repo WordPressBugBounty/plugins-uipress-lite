@@ -43,6 +43,7 @@ class uip_ui_builder extends uip_app
   {
     add_action("plugins_loaded", [$this, "add_ui_builder_actions"], 2);
     add_action("init", [$this, "create_builder_post_types"]);
+    add_action("rest_init", [$this, "create_builder_post_types"]);
     add_filter("kses_allowed_protocols", [$this, "allow_data_in_kses"]);
   }
 
@@ -114,11 +115,11 @@ class uip_ui_builder extends uip_app
     do_action("uipress/app/start");
 
     // Capture toolbar and menu
-    AdminMenu::capture();
-    ToolBar::capture();
+    //AdminMenu::capture();
+    //ToolBar::capture();
 
-    add_action("admin_enqueue_scripts", [$this, "add_scripts_and_styles"]);
-    add_action("admin_footer", [$this, "add_footer_scripts"], 9);
+    //add_action("admin_enqueue_scripts", [$this, "add_scripts_and_styles"]);
+    //add_action("admin_footer", [$this, "add_footer_scripts"], 9);
   }
 
   /**
@@ -134,7 +135,10 @@ class uip_ui_builder extends uip_app
       return;
     }
 
-    add_options_page("uipress", "uipress", "uip_manage_ui", uip_plugin_shortname . "-ui-builder", [$this, "build_uibuilder_page"]);
+    $hook_suffix = add_options_page("uiPress", "uiPress", "manage_options", uip_plugin_shortname . "-ui-builder", [$this, "build_uibuilder_page"]);
+
+    add_action("admin_head-{$hook_suffix}", [$this, "add_scripts_and_styles"]);
+    add_action("admin_footer-{$hook_suffix}", [$this, "add_footer_scripts"]);
   }
 
   /**
@@ -159,43 +163,23 @@ class uip_ui_builder extends uip_app
    */
   public function add_footer_scripts()
   {
+    $script_name = UipScripts::get_base_script_path("builder");
+
+    if (!$script_name) {
+      return;
+    }
+
     $builderScript = [
       "id" => "uip-ui-builder-js",
-      "src" => uip_plugin_url . "app/dist/builder.build.js",
+      "src" => uip_plugin_url . "app/dist/{$script_name}",
       "type" => "module",
     ];
 
-    $appOptions = AppOptions::get_options();
-    $userPrefs = UserPreferences::get();
     $path = plugins_url("uipress-lite/");
 
     $variableFormatter = "
-      const uipressLitePath = '{$path}';
-      var ajaxHolder = document.querySelector('#uip-app-data');
-      var ajaxData = ajaxHolder.getAttribute('uip_ajax');
-      var uip_ajax = JSON.parse(ajaxData, (k, v) => (v === 'uiptrue' ? true : v === 'uipfalse' ? false : v === 'uipblank' ? '' : v));";
+      const uipressLitePath = '{$path}';";
 
-    $dataScript = [
-      "id" => "uip-app-data",
-      "uip_ajax" => wp_json_encode(
-        [
-          "ajax_url" => admin_url("admin-ajax.php"),
-          "security" => wp_create_nonce("uip-security-nonce"),
-          "rest_url" => get_rest_url(),
-          "rest_headers" => [
-            "Content-Type" => "application/json",
-            "X-WP-Nonce" => wp_create_nonce("wp_rest"),
-          ],
-          "uipAppData" => [
-            "options" => Sanitize::clean_input_with_code($appOptions),
-            "userPrefs" => Sanitize::clean_input_with_code($userPrefs),
-          ],
-        ],
-        JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP
-      ),
-    ];
-
-    wp_print_script_tag($dataScript);
     wp_print_inline_script_tag($variableFormatter, ["id" => "uip-format-vars"]);
     wp_print_script_tag($builderScript);
   }

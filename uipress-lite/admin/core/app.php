@@ -40,6 +40,36 @@ class uip_app
   {
     add_filter("plugin_action_links_uipress-lite/uipress-lite.php", ["UipressLite\Classes\Tables\PluginsTable", "add_builder_link"]);
     add_action("plugins_loaded", [$this, "start_uipress_app"], 1);
+    add_filter("register_post_type_args", [$this, "ensure_rest_for_admin_menus"], 10, 2);
+    add_filter("rest_api_init", [$this, "ensure_rest_fields_for_admin_menus"]);
+  }
+
+  public static function ensure_rest_for_admin_menus($args, $post_type)
+  {
+    if ($post_type === "uip-admin-menu") {
+      $args["show_in_rest"] = true;
+
+      // Optionally configure REST API settings
+      $args["rest_base"] = "uip-admin-menu"; // The base URL in REST API
+      $args["rest_controller_class"] = "WP_REST_Posts_Controller";
+    }
+
+    return $args;
+  }
+
+  public static function ensure_rest_fields_for_admin_menus()
+  {
+    register_rest_field("uip-admin-menu", "uipress", [
+      "get_callback" => function ($post) {
+        return [
+          "settings" => get_post_meta($post["id"], "uip_menu_settings", true),
+          "forRoles" => get_post_meta($post["id"], "uip-menu-for-roles", true),
+          "forUsers" => get_post_meta($post["id"], "uip-menu-for-users", true),
+          "excludesRoles" => get_post_meta($post["id"], "uip-menu-excludes-roles", true),
+          "excludesUsers" => get_post_meta($post["id"], "uip-menu-excludes-users", true),
+        ];
+      },
+    ]);
   }
 
   /**
@@ -60,23 +90,26 @@ class uip_app
     // White list uiPress scripts / styles with other plugins
     UipScripts::whitelist_plugins();
 
-    // Checks if we are on a iframe page and if so start framed page actions and exit
-    $user_id = get_current_user_id();
-    //$activeTransient = get_transient("uip_template_active_" . $user_id);
-
-    $isIframe = isset($_SERVER["HTTP_SEC_FETCH_DEST"]) && strtolower($_SERVER["HTTP_SEC_FETCH_DEST"]) === "iframe";
-
-    // We are loading within the frame
-    if ($isIframe) {
+    // Check if we are in the builder / iframe
+    if (self::is_framed_page()) {
       FramedPages::start();
       AdminPage::start(true);
-    }
-    // Outside the frame
-    else {
-      $this->start_apps();
+      return;
     }
 
+    $this->start_apps();
+
     add_action("admin_footer", ["UipressLite\Classes\Scripts\UipScripts", "output_user_styles"], 0);
+  }
+
+  /**
+   * Checks if we are in a framed page
+   *
+   * @return boolean
+   */
+  private static function is_framed_page()
+  {
+    return isset($_SERVER["HTTP_SEC_FETCH_DEST"]) && strtolower($_SERVER["HTTP_SEC_FETCH_DEST"]) === "iframe";
   }
 
   /**
@@ -115,6 +148,8 @@ class uip_app
    */
   private function should_we_exit()
   {
-    return wp_doing_cron() || wp_doing_ajax() || (defined("REST_REQUEST") && REST_REQUEST);
+    global $pagenow;
+
+    return $pagenow === "customize.php" || $pagenow === "site-editor.php" || wp_doing_cron() || wp_doing_ajax() || (defined("REST_REQUEST") && REST_REQUEST);
   }
 }

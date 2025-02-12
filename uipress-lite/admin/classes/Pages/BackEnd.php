@@ -6,6 +6,7 @@ use UipressLite\Classes\App\UserPreferences;
 use UipressLite\Classes\Scripts\ToolBar;
 use UipressLite\Classes\Scripts\AdminMenu;
 use UipressLite\Classes\PostTypes\UiTemplates;
+use UipressLite\Classes\Scripts\UipScripts;
 
 !defined("ABSPATH") ? exit() : "";
 
@@ -34,46 +35,7 @@ class BackEnd
       return;
     }
 
-    // Reset transient
-    $user_id = get_current_user_id();
-    $transient_name = "uip_template_active_" . $user_id;
-    delete_transient($transient_name);
-
-    // get template
-    $templates = UiTemplates::get_template_for_user("ui-template", 1);
-
-    // No templates so exit
-    if (!count($templates)) {
-      define("uip_app_running", false);
-      return;
-    }
-
-    // Template is missing required blocks so exit
-    if (!self::has_required_blocks($templates[0])) {
-      self::output_missing_template_warning();
-      return;
-    }
-
-    // App should not load
-    if (defined("uip_app_running") && !uip_app_running) {
-      return;
-    }
-
-    // Check for secure connection
-    if (!self::check_for_secure_conection()) {
-      add_action("admin_head", ["UipressLite\Classes\Pages\BackEnd", "secure_connection_flag"], 99);
-      define("uip_app_running", false);
-      return;
-    }
-
-    // Define app running constant
-    if (!defined("uip_app_running")) {
-      define("uip_app_running", true);
-    }
-
-    self::define_active_transient($templates[0], $user_id);
-
-    self::output_template($templates[0]);
+    self::output_template();
     self::add_hooks();
     //add_action("admin_enqueue_scripts", ["UipressLite\Classes\Pages\BackEnd", "remove_scripts"], 100);
     //add_action("script_loader_tag", ["UipressLite\Classes\Pages\BackEnd", "add_type_attribute_to_admin_scripts"], 10, 3);
@@ -86,7 +48,7 @@ class BackEnd
    */
   public static function should_uipress_run()
   {
-    if (isset($_GET["action"]) && sanitize_text_field($_GET["action"]) == "elementor") {
+    if (defined("uip_app_running") && uip_app_running === false) {
       return false;
     }
 
@@ -162,8 +124,6 @@ class BackEnd
         if (strpos($handle, "uip") !== false) {
           continue;
         }
-
-        error_log($handle);
 
         wp_dequeue_script($handle);
         wp_deregister_script($handle);
@@ -279,14 +239,13 @@ class BackEnd
    */
   private static function add_hooks()
   {
-    ToolBar::capture();
-    AdminMenu::capture();
+    //ToolBar::capture();
+    //AdminMenu::capture();
 
     add_action("admin_enqueue_scripts", ["UipressLite\Classes\Scripts\UipScripts", "add_translations"]);
     add_filter("admin_xml_ns", ["UipressLite\Classes\Pages\BackEnd", "add_dark_mode"]);
     add_action("admin_bar_init", ["UipressLite\Classes\Scripts\UipScripts", "remove_admin_bar_style"]);
     add_action("admin_enqueue_scripts", ["UipressLite\Classes\Scripts\UipScripts", "add_uipress_styles"]);
-    add_action("admin_enqueue_scripts", ["UipressLite\Classes\Scripts\UipScripts", "remove_non_standard_styles"], 1);
   }
 
   /**
@@ -311,53 +270,22 @@ class BackEnd
    * @param object $template - the template post object
    * @return void
    */
-  private static function output_template($template)
+  private static function output_template()
   {
-    $multiSiteActive = false;
-    if (is_multisite() && is_plugin_active_for_network(uip_plugin_path_name . "/uipress-lite.php") && !is_main_site()) {
-      switch_to_blog(get_main_site_id());
-      $multiSiteActive = true;
-    }
-
-    $templateSettings = UiTemplates::get_settings($template->ID);
-    $templateContent = UiTemplates::get_content($template->ID);
-
-    $templateObject = [];
-    $templateObject["settings"] = $templateSettings;
-    $templateObject["content"] = $templateContent;
-    $templateObject["id"] = $template->ID;
-    $templateObject["updated"] = get_the_modified_date("U", $template->ID);
-
-    $templateString = Sanitize::clean_input_with_code($templateObject);
-    $templateString = wp_json_encode($templateString);
-    $templateString = html_entity_decode($templateString);
-
     // Create anonymous function so we can use the template string at runtime
-    $outputter = function () use ($templateString) {
-      // Output template
-      $variableFormatter = "var uipUserTemplate = {$templateString}; var uipMasterMenu = {menu:[]}";
-      wp_print_inline_script_tag($variableFormatter, ["id" => "uip-interface-template"]);
-
-      $app = '
-      <div class="uip-position-absolute uip-w-100vw uip-h-100p uip-background-default uip-top-0 uip-user-frame uip-body-font uip-teleport uip-flex" id="uip-ui-interface">
-      </div>
-      ';
-
-      echo wp_kses_post($app);
-
-      // Trigger pro actions
+    $outputter = function () {
       do_action("uip_import_pro_front");
     };
 
-    // Switch back to main blog if multisite
-    if ($multiSiteActive) {
-      restore_current_blog();
-    }
-
     // Output template after admin bar render
     add_action("admin_footer", $outputter, 1);
-    add_action("admin_footer", ["UipressLite\Classes\Scripts\UipScripts", "add_uip_app"], 2);
-    add_action("admin_footer", ["UipressLite\Classes\Pages\BackEnd", "load_uip_script"], 3);
+    add_action("admin_enqueue_scripts", ["UipressLite\Classes\Pages\BackEnd", "output_data_attributes"], 2);
+    add_action("admin_enqueue_scripts", ["UipressLite\Classes\Pages\BackEnd", "load_uip_script"], 3);
+  }
+
+  public static function output_data_attributes()
+  {
+    UipScripts::add_uip_app("ui-template", null);
   }
 
   /**
@@ -367,10 +295,20 @@ class BackEnd
    */
   public static function load_uip_script()
   {
+    $script_name = UipScripts::get_base_script_path("uipinterface");
+
+    if (!$script_name) {
+      return;
+    }
+
     wp_print_script_tag([
       "id" => "uip-interface-js",
-      "src" => uip_plugin_url . "app/dist/uipinterface.build.js?ver=" . uip_plugin_version,
+      "src" => uip_plugin_url . "app/dist/{$script_name}",
       "type" => "module",
     ]);
+
+    $app = "<style id='uipress-body-hider'>body{opacity: 0}</style>";
+
+    echo wp_kses_post($app);
   }
 }

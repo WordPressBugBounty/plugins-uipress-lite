@@ -6,6 +6,7 @@ use UipressLite\Classes\App\UserPreferences;
 use UipressLite\Classes\Scripts\ToolBar;
 use UipressLite\Classes\Scripts\AdminMenu;
 use UipressLite\Classes\PostTypes\UiTemplates;
+use UipressLite\Classes\Scripts\UipScripts;
 
 !defined("ABSPATH") ? exit() : "";
 
@@ -31,8 +32,24 @@ class AdminPage
    */
   public static function actions()
   {
-    // Get all admin pages applicable to user
-    $templates = UiTemplates::get_template_for_user("ui-admin-page", -1);
+    $user_id = get_current_user_id();
+    $cache_key = UipScripts::get_cache_key();
+    $cache_option_name = "uipress-cached-templates-{$user_id}";
+    $cached_pages = get_option($cache_option_name, false);
+
+    if ($cached_pages && isset($cached_pages["cache_key"]) && $cached_pages["cache_key"] === $cache_key) {
+      $templates = $cached_pages["templates"];
+    } else {
+      $templates = UiTemplates::get_template_for_user("ui-admin-page", -1);
+      $templates = self::process_pages($templates);
+
+      $cache_data = [
+        "cache_key" => $cache_key,
+        "templates" => $templates,
+      ];
+
+      update_option($cache_option_name, $cache_data);
+    }
 
     // No templates so exit
     if (!count($templates)) {
@@ -57,9 +74,7 @@ class AdminPage
    */
   private static function add_menu_pages($templates)
   {
-    $processed = self::process_pages($templates);
-
-    foreach ($processed as $uiPage) {
+    foreach ($templates as $uiPage) {
       $passData = $uiPage["passData"];
       $multisite = $passData->fromMainSite ? true : false;
 
@@ -103,6 +118,7 @@ class AdminPage
                 let icon = classItem.replace('dashicons-uip-icon-', '');
                 if(icon == 'uipblank'){icon = 'favorite'};
                 let iconPath = '{$iconPath}' + icon + '.svg';
+                item.classList.add('uipress-data-icon-' + icon);
                 item.classList.remove(classItem);
                 item.innerHTML = '<span class=\"uip-background-icon\" style=\"display: flex;align-items: center;justify-items: center;height: 100%;justify-content: center;margin-left:auto;margin-right:auto;mask:url(' + iconPath + ') center center / contain no-repeat\"></span>';
               }
@@ -204,27 +220,13 @@ class AdminPage
       switch_to_blog(get_main_site_id());
     }
 
-    $templateSettings = UiTemplates::get_settings($template->ID);
-    $templateContent = UiTemplates::get_content($template->ID);
-
     $templateObject = [];
-    $templateObject["settings"] = $templateSettings;
-    $templateObject["content"] = $templateContent;
     $templateObject["id"] = $template->ID;
-    $templateObject["updated"] = get_the_modified_date("U", $template->ID);
-
-    $templateString = Sanitize::clean_input_with_code($templateObject);
-    $templateString = wp_json_encode($templateString);
-    $templateString = html_entity_decode($templateString);
 
     // Switch back to current blog
     if ($multisite) {
       restore_current_blog();
     }
-
-    // Output template
-    $variableFormatter = "var uipUserTemplate = {$templateString}; var uipMasterMenu = {menu:[]}";
-    wp_print_inline_script_tag($variableFormatter, ["id" => "uip-admin-page-data"]);
 
     $app = "
       <style>#wpcontent{padding-left: 0;}#wpbody-content{padding-bottom:0px;}@media screen and (max-width: 782px) {.auto-fold #wpcontent { padding: 0 !important;}}</style>
@@ -235,8 +237,20 @@ class AdminPage
 
     // Trigger pro actions
     do_action("uip_import_pro_front");
-    add_action("admin_footer", ["UipressLite\Classes\Scripts\UipScripts", "add_uip_app"], 2);
-    add_action("admin_footer", ["UipressLite\Classes\Pages\AdminPage", "load_uip_script"], 3);
+    add_action(
+      "admin_footer",
+      function () use ($templateObject) {
+        UipScripts::add_uip_app("ui-admin-page", $templateObject["id"]);
+      },
+      2
+    );
+    add_action(
+      "admin_footer",
+      function () use ($templateObject) {
+        self::load_uip_script($templateObject["id"]);
+      },
+      2
+    );
   }
 
   /**
@@ -244,11 +258,17 @@ class AdminPage
    *
    * @return void
    */
-  public static function load_uip_script()
+  public static function load_uip_script($templateID)
   {
+    $script_name = UipScripts::get_base_script_path("uipadminpage");
+
+    if (!$script_name) {
+      return;
+    }
+
     wp_print_script_tag([
       "id" => "uip-adminpage-js",
-      "src" => uip_plugin_url . "app/dist/uipadminpage.build.js?ver=" . uip_plugin_version,
+      "src" => uip_plugin_url . "app/dist/{$script_name}?template-id={$templateID}&template-type=ui-admin-page",
       "type" => "module",
     ]);
   }
