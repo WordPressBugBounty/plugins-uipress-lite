@@ -10,8 +10,8 @@
       "_index-BqOh4_m_.js"
     ]
   },
-  "_index-BIcRBHEn.js": {
-    "file": "assets/index-BIcRBHEn.js",
+  "_index-BaSuHFhj.js": {
+    "file": "assets/index-BaSuHFhj.js",
     "name": "index",
     "imports": [
       "_fonts-CcfgmNTE.js",
@@ -33,39 +33,25 @@
       "_index-BqOh4_m_.js"
     ]
   },
-  "_setupApp-BHqJ050i.js": {
-    "file": "assets/setupApp-BHqJ050i.js",
-    "name": "setupApp",
-    "imports": [
-      "_index-BqOh4_m_.js"
-    ]
-  },
-  "_setupApp-CRNjUmI8.js": {
-    "file": "assets/setupApp-CRNjUmI8.js",
-    "name": "setupApp",
-    "imports": [
-      "_index-BqOh4_m_.js"
-    ]
-  },
-  "_setupApp-CUjJT1YG.js": {
-    "file": "assets/setupApp-CUjJT1YG.js",
+  "_setupApp-aILEgncO.js": {
+    "file": "assets/setupApp-aILEgncO.js",
     "name": "setupApp",
     "imports": [
       "_index-BqOh4_m_.js"
     ]
   },
   "src/apps/uip-admin-page.js": {
-    "file": "uipadminpage.build.0vcsGdqk.js",
+    "file": "uipadminpage.build.DG_PaTlr.js",
     "name": "uipadminpage",
     "src": "src/apps/uip-admin-page.js",
     "isEntry": true,
     "imports": [
-      "_setupApp-BHqJ050i.js",
+      "_setupApp-aILEgncO.js",
       "_index-BqOh4_m_.js"
     ]
   },
   "src/apps/uip-builder.js": {
-    "file": "builder.build.CL1QC6Os.js",
+    "file": "builder.build.i5yq3x9J.js",
     "name": "builder",
     "src": "src/apps/uip-builder.js",
     "isEntry": true,
@@ -84,22 +70,22 @@
     ]
   },
   "src/apps/uip-frontend.js": {
-    "file": "uipfrontend.build.DF51Wyjl.js",
+    "file": "uipfrontend.build.kjPGEOtR.js",
     "name": "uipfrontend",
     "src": "src/apps/uip-frontend.js",
     "isEntry": true,
     "imports": [
-      "_setupApp-BHqJ050i.js",
+      "_setupApp-aILEgncO.js",
       "_index-BqOh4_m_.js"
     ]
   },
   "src/apps/uip-interface.js": {
-    "file": "uipinterface.build.D11BW_ET.js",
+    "file": "uipinterface.build.DEyuCheI.js",
     "name": "uipinterface",
     "src": "src/apps/uip-interface.js",
     "isEntry": true,
     "imports": [
-      "_setupApp-BHqJ050i.js",
+      "_setupApp-aILEgncO.js",
       "_index-BqOh4_m_.js"
     ]
   },
@@ -119,7 +105,7 @@
     "isDynamicEntry": true
   },
   "src/options/code-editor/index.vue": {
-    "file": "assets/index-DWaNMgmb.js",
+    "file": "assets/index-cIk8mjZ1.js",
     "name": "index",
     "src": "src/options/code-editor/index.vue",
     "isDynamicEntry": true,
@@ -129,7 +115,7 @@
     ]
   },
   "src/pages/error-log/index.vue": {
-    "file": "assets/index-I8-1qR3v.js",
+    "file": "assets/index-CyMyhmgN.js",
     "name": "index",
     "src": "src/pages/error-log/index.vue",
     "isDynamicEntry": true,
@@ -140,7 +126,7 @@
     ]
   },
   "src/pages/home/index.vue": {
-    "file": "assets/index-D3efJ1AD.js",
+    "file": "assets/index-Du59XWYo.js",
     "name": "index",
     "src": "src/pages/home/index.vue",
     "isDynamicEntry": true,
@@ -160,13 +146,13 @@
     ]
   },
   "src/pages/site-settings/index.vue": {
-    "file": "assets/index-hZi1s-cR.js",
+    "file": "assets/index-9xaHE4u7.js",
     "name": "index",
     "src": "src/pages/site-settings/index.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index-BqOh4_m_.js",
-      "_index-BIcRBHEn.js",
+      "_index-BaSuHFhj.js",
       "_index-BFOCXIdt.js",
       "_fonts-CcfgmNTE.js",
       "src/apps/uip-builder.js"
@@ -186,13 +172,13 @@
     ]
   },
   "src/uibuilder/builder-settings/index.vue": {
-    "file": "assets/index-Bb9GKMpL.js",
+    "file": "assets/index-DhdDwjIW.js",
     "name": "index",
     "src": "src/uibuilder/builder-settings/index.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index-BqOh4_m_.js",
-      "_index-BIcRBHEn.js",
+      "_index-BaSuHFhj.js",
       "_fonts-CcfgmNTE.js",
       "src/apps/uip-builder.js"
     ],
@@ -201,7 +187,7 @@
     ]
   },
   "src/uibuilder/framework/index.vue": {
-    "file": "assets/index-Co3lj1pH.js",
+    "file": "assets/index-BdfT9hEF.js",
     "name": "index",
     "src": "src/uibuilder/framework/index.vue",
     "isDynamicEntry": true,
