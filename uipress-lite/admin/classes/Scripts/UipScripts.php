@@ -185,6 +185,7 @@ class UipScripts
       "template-id" => esc_attr($template_id),
       "user-id" => esc_attr($current_user->ID),
       "user-name" => esc_attr($current_user->user_name),
+      "site-id" => esc_attr(get_current_blog_id()),
       "uip_ajax" => wp_json_encode(
         [
           "ajax_url" => $ajaxURL,

@@ -1,9 +1,19 @@
 == Changelog ==
 
+= 3.5.04 =
+* Release Date 20 February 2025*
+
+* Fixed issue where menu collapsed styles were not working correctly in Safari browser
+* Fixed issue where dropdowns were not showing in the uiBuilder when no active template was applied
+* Fixed issue that could cause subsites on multisite to 404
+* Fixed alignment issue with admin menu icons
+* Updated templates cache key to better handle multisite enviroments and user switching
+* Added fix for certain custom menu items showing with blank names
+
 = 3.5.03 =
 * Release Date 19 February 2025*
 
-* Ammended form submission data (saving as site option) For data saved as a site option is now prepended with 'uip_form_' to prevent possible security breaches.
+* Amended form submission data (saving as site option) For data saved as a site option is now prepended with 'uip_form_' to prevent possible security breaches.
 * Fixed toolbar issue with fluentCRM
 * Fixed conflicts with mainwp in the menu and visually issues
 * Fixed a potential issue with content folders when loaded too early could cause a plugin conflict.
