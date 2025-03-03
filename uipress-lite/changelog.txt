@@ -1,5 +1,18 @@
 == Changelog ==
 
+= 3.5.05 =
+* Release Date 03 March 2025*
+
+* Fixed issue with menu icons that could render old icon behind updated one.
+* Fixed issue that could cause whiteouts on subsites without access to the mainsite
+* Fixed issue with acf headers showing unwanted text
+* Fixed z-index issue on the block editor
+* Fixed fullscreen toggle
+* Added style fixes for gravity forms
+* Removed form save as site option to enhance security
+* Fixed issue with custom styles not loading on frontend
+* Fixed issue with dark styles not applying
+
 = 3.5.04 =
 * Release Date 20 February 2025*
 
