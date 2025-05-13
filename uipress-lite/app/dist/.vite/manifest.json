@@ -3,19 +3,19 @@
     "file": "assets/fonts-CcfgmNTE.js",
     "name": "fonts"
   },
-  "_index-BGAHiO-M.js": {
-    "file": "assets/index-BGAHiO-M.js",
-    "name": "index",
-    "imports": [
-      "_fonts-CcfgmNTE.js",
-      "src/apps/uip-builder.js",
-      "_index-COn-5JHg.js"
-    ]
-  },
   "_index-BlvaEJug.js": {
     "file": "assets/index-BlvaEJug.js",
     "name": "index",
     "imports": [
+      "_index-COn-5JHg.js"
+    ]
+  },
+  "_index-C4ABhDTW.js": {
+    "file": "assets/index-C4ABhDTW.js",
+    "name": "index",
+    "imports": [
+      "_fonts-CcfgmNTE.js",
+      "src/apps/uip-builder.js",
       "_index-COn-5JHg.js"
     ]
   },
@@ -51,7 +51,7 @@
     ]
   },
   "src/apps/uip-builder.js": {
-    "file": "builder.build.DfBdCMNY.js",
+    "file": "builder.build.8FJOt4A4.js",
     "name": "builder",
     "src": "src/apps/uip-builder.js",
     "isEntry": true,
@@ -105,7 +105,7 @@
     "isDynamicEntry": true
   },
   "src/options/code-editor/index.vue": {
-    "file": "assets/index-CZJqsJJT.js",
+    "file": "assets/index-BcYqlRBM.js",
     "name": "index",
     "src": "src/options/code-editor/index.vue",
     "isDynamicEntry": true,
@@ -115,7 +115,7 @@
     ]
   },
   "src/pages/error-log/index.vue": {
-    "file": "assets/index-DASFFZQX.js",
+    "file": "assets/index-Jx5_JBNQ.js",
     "name": "index",
     "src": "src/pages/error-log/index.vue",
     "isDynamicEntry": true,
@@ -126,7 +126,7 @@
     ]
   },
   "src/pages/home/index.vue": {
-    "file": "assets/index-DEZJ-fwh.js",
+    "file": "assets/index-TNco5aFM.js",
     "name": "index",
     "src": "src/pages/home/index.vue",
     "isDynamicEntry": true,
@@ -146,13 +146,13 @@
     ]
   },
   "src/pages/site-settings/index.vue": {
-    "file": "assets/index-u6gB1kpK.js",
+    "file": "assets/index-DEXAYNDi.js",
     "name": "index",
     "src": "src/pages/site-settings/index.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index-COn-5JHg.js",
-      "_index-BGAHiO-M.js",
+      "_index-C4ABhDTW.js",
       "_index-BlvaEJug.js",
       "_fonts-CcfgmNTE.js",
       "src/apps/uip-builder.js"
@@ -172,13 +172,13 @@
     ]
   },
   "src/uibuilder/builder-settings/index.vue": {
-    "file": "assets/index-CjDKXeEP.js",
+    "file": "assets/index-ajyvLJ2d.js",
     "name": "index",
     "src": "src/uibuilder/builder-settings/index.vue",
     "isDynamicEntry": true,
     "imports": [
       "_index-COn-5JHg.js",
-      "_index-BGAHiO-M.js",
+      "_index-C4ABhDTW.js",
       "_fonts-CcfgmNTE.js",
       "src/apps/uip-builder.js"
     ],
@@ -187,7 +187,7 @@
     ]
   },
   "src/uibuilder/framework/index.vue": {
-    "file": "assets/index-B1b5Z-O1.js",
+    "file": "assets/index-4oDt5k0Z.js",
     "name": "index",
     "src": "src/uibuilder/framework/index.vue",
     "isDynamicEntry": true,

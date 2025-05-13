@@ -692,6 +692,8 @@ class uip_ajax
 
   /**
    * Processes data from a form to user supplied function
+   *
+   * This feature is no longer supported or available
    * @since 3.0.0
    */
   public function uip_process_form_input()
@@ -699,26 +701,7 @@ class uip_ajax
     // Check security nonce and 'DOING_AJAX' global
     Ajax::check_referer();
 
-    $data = json_decode(stripslashes($_POST["formData"]));
-    $data = Sanitize::clean_input_with_code($data);
-
-    $userFunction = sanitize_text_field($_POST["userFunction"]);
-
-    if (!function_exists($userFunction)) {
-      Ajax::error(__('Passed function doesn\'t exist', "uipress-lite"));
-    }
-
-    // Try to start user supplied function
-    try {
-      $userFunction($data);
-    } catch (Exception $e) {
-      // Catch function error
-      Ajax::error($e->getMessage());
-    }
-
-    $returndata = [];
-    $returndata["success"] = true;
-    wp_send_json($returndata);
+    Ajax::error(__("Passing form data to user specified functions has been disabled to prevent potential security issues.", "uipress-lite"));
   }
 
   /**
