@@ -130,13 +130,6 @@
     border: 2px solid var(--uip-color-base-2);
   }
 }
-
-@media screen and (max-width: 782px) {
-  .woocommerce-layout__header {
-    display: none;
-  }
-}
-
 html[uip-framed-page="true"] {
   #e-admin-top-bar-root {
     width: 100%;

@@ -3,8 +3,8 @@ Contributors: markuipress
 Tags: admin theme, custom dashboard, google analytics, woocommerce analytics, white label
 Requires at least: 6.0
 Requires PHP: 7.4
-Tested up to: 6.7
-Stable tag: 3.5.08
+Tested up to: 6.8
+Stable tag: 3.5.09
 License: GPLv2 or later
 
 Effortless custom WordPress admin dashboards.
@@ -55,12 +55,17 @@ Upload the UiPress plugin to your blog, activate it, and then navigate to the ui
 
 == Changelog ==
 
-= 3.5.08 =
-* Release Date 13 May 2025*
+= 3.5.09 =
+* Release Date 19 November 2025*
 
-* Fixed potential security issue with forms block. 
-* Removed the ability to send form data to from form blocks.
-* Fixed issue with woocommerce header on mobile
+* Security: Added proper capability checks to all AJAX functions to prevent unauthorized access
+* Security: Fixed missing authorization vulnerability in uip_save_site_option() and other AJAX handlers
+* Security: Fixed sensitive information exposure vulnerability in uip_process_block_query() (CVE-2025-10938)
+* Security: Added list_users capability check for user queries to prevent unauthorized user data access
+* Security: Added user data sanitization to remove password hashes and other sensitive fields from query results
+* Security: Added manage_options capability check to all admin-level functions
+* Security: Added user authentication checks to user-specific functions
+* Updated tested up to WordPress 6.8
 
 = 3.5.07 =
 * Release Date 20 March 2025*
