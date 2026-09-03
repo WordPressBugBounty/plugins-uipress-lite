@@ -1,17 +1,19 @@
 === UiPress lite | Effortless custom dashboards, admin themes and pages ===
 Contributors: markuipress
 Tags: admin theme, custom dashboard, google analytics, woocommerce analytics, white label
-Requires at least: 6.0
+Requires at least: 7.0
 Requires PHP: 7.4
-Tested up to: 6.8
-Stable tag: 3.5.09
+Tested up to: 7.01
+Stable tag: 3.5.10
 License: GPLv2 or later
 
 Effortless custom WordPress admin dashboards.
 
 == Description ==
 
-A block based visual builder for the WordPress admin. Create admin pages, dashboards and WordPress admin themes with no code. From custom dashboards, profile pages to entire admin frameworks, the uiBuilder can do it all. Pre-made intuitive blocks and a library of professional templates make it super easy to transform the way your site users interact with your content.
+[UiPress](https://uipress.co/) is a block based visual builder for the WordPress admin. Create admin pages, dashboards and WordPress admin themes with no code. From custom dashboards, profile pages to entire admin frameworks, the uiBuilder can do it all. Pre-made intuitive blocks and a library of professional templates make it super easy to transform the way your site users interact with your content.
+
+Learn more, browse templates, and get documentation at [uipress.co](https://uipress.co/).
 
 ### Major features in ui press lite include:
 
@@ -45,7 +47,7 @@ Modernise the login experience for your site users with the ui press login page 
 
 ## The uiBuilder is a modern web app and is built with Vue.js
 
-UiPress has countless options and customisations built in including the option to override block templates. For those that want to go further we have a well documented and easy to use API for creating custom blocks, options and more.
+UiPress has countless options and customisations built in including the option to override block templates. For those that want to go further, the [UiPress developer API](https://uipress.co/) makes it easy to create custom blocks, options and more.
 
 == Installation ==
 
@@ -54,6 +56,21 @@ Upload the UiPress plugin to your blog, activate it, and then navigate to the ui
 1, 2, 3: You're done!
 
 == Changelog ==
+
+= 3.5.10 =
+* Release Date 19 August 2026*
+
+* Security: Added manage_options capability check to uip_save_global_settings and all ui builder AJAX actions (CVE-2026-2294)
+* Security: Pinned Quill to 2.0.2 to avoid XSS in HTML export (CVE-2025-15056)
+* Security: Blocked privileged user-meta writes from form submissions
+* Security: Restricted form email sending to template allowlisted recipients, rate limited requests, and stopped using the recipient as the From address
+* Security: PHP form actions now require an explicit uipress_allowed_form_functions allowlist
+* Security: Frontend app and AJAX nonce only load when a frontend template is assigned; plugin lists and ACF options are omitted from that payload
+* Security: Added capability checks to user, post, and site query AJAX handlers
+* Security: UI CPT REST routes require authentication; writes require manage_options
+* Security: Remote export uses a cryptographic key, hash_equals, and re-checks hostEnabled; remote import blocks private/loopback URLs
+* Security: Limited data: KSES protocol to the builder page and error log reads to the last 5000 lines
+* Fixed JSON parse error on WordPress 7 caused by HTML-encoded script attributes
 
 = 3.5.09 =
 * Release Date 19 November 2025*
@@ -219,7 +236,7 @@ Upload the UiPress plugin to your blog, activate it, and then navigate to the ui
 * Added new dedicated licence manager to the site settings
 
 
-For older changelog entries, please see https://uipress.co/uipresschangelog/
+For older changelog entries, please see the [UiPress changelog](https://uipress.co/uipresschangelog/).
 
 To see uncompiled code see: https://github.com/wpuipress/uipress-lite
 
